@@ -12,27 +12,27 @@ conn = sqlite3.connect("cell_counts.db")
 cursor = conn.cursor()
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS projects (
-    project_id TEXT PRIMARY KEY
+    project TEXT PRIMARY KEY
 )
 """)
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS subjects (
-    subject_id TEXT PRIMARY KEY,
-    project_id TEXT,
+    subject TEXT PRIMARY KEY,
+    project TEXT,
     condition TEXT,
     age INTEGER,
     sex TEXT,
     treatment TEXT,
     response TEXT,
-    FOREIGN KEY (project_id) REFERENCES projects(project_id)
+    FOREIGN KEY (project) REFERENCES projects(project)
 )
 """)
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS samples (
-    sample_id TEXT PRIMARY KEY,
-    subject_id TEXT,
+    sample TEXT PRIMARY KEY,
+    subject TEXT,
     sample_type TEXT,
     time_from_treatment_start INTEGER,
     b_cell INTEGER,
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS samples (
     cd4_t_cell INTEGER,
     nk_cell INTEGER,
     monocyte INTEGER,
-    FOREIGN KEY (subject_id) REFERENCES subjects(subject_id)
+    FOREIGN KEY (subject) REFERENCES subjects(subject)
 )
 """)
 
@@ -52,7 +52,7 @@ print(df.head())
 projects = df["project"].drop_duplicates()
 for project in projects:
     cursor.execute(
-        "INSERT OR IGNORE INTO projects (project_id) VALUES (?)",
+        "INSERT OR IGNORE INTO projects (project) VALUES (?)",
         (project,)
     )
 
@@ -63,7 +63,7 @@ subjects = df[
 for _, row in subjects.iterrows():
     cursor.execute("""
         INSERT OR IGNORE INTO subjects
-        (subject_id, project_id, condition, age, sex, treatment, response)
+        (subject, project, condition, age, sex, treatment, response)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     """, (
         row["subject"],
@@ -78,7 +78,7 @@ for _, row in subjects.iterrows():
 for _, row in df.iterrows():
     cursor.execute("""
         INSERT OR IGNORE INTO samples
-        (sample_id, subject_id, sample_type, time_from_treatment_start,
+        (sample, subject, sample_type, time_from_treatment_start,
          b_cell, cd8_t_cell, cd4_t_cell, nk_cell, monocyte)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
