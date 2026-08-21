@@ -20,12 +20,10 @@ Separating these entities avoids repeating the same project and patient informat
 
 This design can scale to larger datasets containing hundreds of projects and thousands of samples. New projects, subjects, and samples can be added without changing the overall database structure. Additional tables or indexes could also be added as the dataset and analytical requirements grow.
 
-### Running the Data Loader
+### Running the Data Loader: 
+From the repository root, run: python load_data.py
 
-From the repository root, run:
 
-```bash
-python load_data.py
 
 ## Part 2: Initial Analysis - Data Overview
 
@@ -46,3 +44,6 @@ The resulting summary table contains:
 - **population** — Immune cell population
 - **count** — Number of cells in that population
 - **percentage** — Relative frequency of the population (rounded to 2 decimal places for better readability)
+
+### Running the Initial Analysis: 
+From the repository root, run: python analysis.py
