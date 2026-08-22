@@ -1,4 +1,52 @@
-# Teiko_Technical_Ines_Maquaire
+# Teiko Technical — Ines Maquaire
+
+## Interactive Dashboard
+
+The interactive Streamlit dashboard displays the results from Parts 2–4, including cell population frequencies, responder vs. non-responder comparisons, statistical results, and baseline subset analysis.
+[View the Interactive Dashboard](https://teikotechnicalinesmaquaire.streamlit.app/)
+
+## Running the Project
+
+The project can be run from the repository root using the provided Makefile.
+
+### 1. Install Dependencies
+
+Install all required Python dependencies:
+
+```bash
+make setup
+```
+
+### 2. Run the Data Pipeline
+
+Run the complete pipeline, including database creation, data loading, analysis, statistical testing, and output generation:
+
+```bash
+make pipeline
+```
+
+This generates the SQLite database and the required output tables and plots for Parts 1–4.
+
+### 3. Start the Dashboard
+
+Start the interactive Streamlit dashboard:
+
+```bash
+make dashboard
+```
+
+The dashboard will start a local Streamlit server and can be opened using the URL displayed in the terminal.
+
+## Project Structure
+
+- `load_data.py` — Creates the SQLite database, initializes the schema, and loads `cell-count.csv`.
+- `analysis.py` — Performs the analyses for Parts 2–4, including cell frequency calculations, statistical testing, visualization, and subset analysis.
+- `dashboard.py` — Runs the interactive Streamlit dashboard.
+- `requirements.txt` — Lists the Python dependencies required to run the project.
+- `Makefile` — Provides commands to install dependencies, run the full pipeline, and start the dashboard.
+- `outputs/` — Contains generated analysis tables and plots.
+
+The project separates data loading, analysis, and visualization so that each part has a clear responsibility. The full workflow can be reproduced automatically using the Makefile.
 
 ## Part 1: Data Management
 
@@ -74,11 +122,11 @@ The results are:
 | nk_cell | 464546.5 | 0.1211 | No |
 | monocyte | 466525.0 | 0.1635 | No |
 
-At the `0.05` significance level, **CD4 T cells are the only population with a statistically significant difference in relative frequency between responders and non-responders**. Because multiple cell populations are tested, the result should be interpreted as evidence of an association rather than proof that CD4 T-cell frequency predicts treatment response.
+At the unadjusted p < 0.05 significance level, CD4 T cells are the only population with a statistically significant difference in relative frequency between responders and non-responders (p = 0.0134). Because five cell populations were tested, this result should be interpreted cautiously as evidence of an association rather than proof that CD4 T-cell frequency predicts treatment response.
 
 ### Visualization
 
-A boxplot is generated to compare the relative frequency distributions of each immune cell population between responders and non-responders. The plot is saved as `cell_population_boxplot.png`.
+A boxplot is generated to compare the relative frequency distributions of each immune cell population between responders and non-responders. The plot is saved as `outputs/cell_population_boxplot.png`.
 
 ### Running the Statistical Analysis
 
