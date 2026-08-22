@@ -24,7 +24,6 @@ This design can scale to larger datasets containing hundreds of projects and tho
 From the repository root, run: python load_data.py
 
 
-
 ## Part 2: Initial Analysis - Data Overview
 
 The analysis calculates the **relative frequency of each immune cell population for every sample**.
@@ -47,3 +46,75 @@ The resulting summary table contains:
 
 ### Running the Initial Analysis: 
 From the repository root, run: python analysis.py
+
+
+## Part 3: Statistical Analysis
+
+The analysis compares **immune cell population relative frequencies between responders and non-responders**.
+
+The data is filtered to include only:
+
+- **Condition:** Melanoma
+- **Treatment:** Miraclib
+- **Sample type:** PBMC
+
+Responder status is determined using the `response` column, where `yes` represents responders and `no` represents non-responders.
+
+### Statistical Testing
+
+For each immune cell population, a **two-sided Mann–Whitney U test** is used to compare relative frequencies between responders and non-responders. A significance threshold of `p < 0.05` is used.
+
+The results are:
+
+| Population | U Statistic | p-value | Significant |
+|---|---:|---:|---|
+| b_cell | 459975.5 | 0.0557 | No |
+| cd8_t_cell | 478178.0 | 0.6392 | No |
+| cd4_t_cell | 515255.0 | 0.0134 | Yes |
+| nk_cell | 464546.5 | 0.1211 | No |
+| monocyte | 466525.0 | 0.1635 | No |
+
+At the `0.05` significance level, **CD4 T cells are the only population with a statistically significant difference in relative frequency between responders and non-responders**. Because multiple cell populations are tested, the result should be interpreted as evidence of an association rather than proof that CD4 T-cell frequency predicts treatment response.
+
+### Visualization
+
+A boxplot is generated to compare the relative frequency distributions of each immune cell population between responders and non-responders. The plot is saved as `cell_population_boxplot.png`.
+
+### Running the Statistical Analysis
+
+From the repository root, run: python analysis.py
+
+## Part 4: Data Subset Analysis
+
+The analysis identifies **baseline melanoma PBMC samples from patients treated with miraclib** using the following filters:
+
+- **Condition:** Melanoma
+- **Treatment:** Miraclib
+- **Sample type:** PBMC
+- **Time from treatment start:** 0
+
+A total of **656 baseline samples** met these criteria.
+
+### Baseline Sample Summary
+
+- **Samples by project:**
+  - prj1: 384
+  - prj3: 272
+
+- **Subjects by response:**
+  - Responders: 331
+  - Non-responders: 325
+
+- **Subjects by sex:**
+  - Female: 312
+  - Male: 344
+
+### Additional B-Cell Analysis
+
+For the additional question, the analysis considers **male melanoma responders at time 0 across all sample and treatment types**.
+
+The average B-cell count for these samples is: **10,206.15**
+
+### Running the Analysis
+
+From the repository root, run:python analysis.py
