@@ -3,7 +3,7 @@
 ## Interactive Dashboard
 
 The interactive Streamlit dashboard displays the results from Parts 2–4, including cell population frequencies, responder vs. non-responder comparisons, statistical results, and baseline subset analysis.
-[View the Interactive Dashboard](https://teikotechnicalinesmaquaire.streamlit.app/)
+[View the Interactive Dashboard](https://teikotechnicalinesmaquaire.streamlit.app/) (https://teikotechnicalinesmaquaire.streamlit.app/)
 
 ## Running the Project
 
