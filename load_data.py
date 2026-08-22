@@ -47,7 +47,6 @@ CREATE TABLE IF NOT EXISTS samples (
 # Step 3: read the CSV and insert the data into the database
 
 df = pd.read_csv("cell-count.csv")
-print(df.head())
 
 projects = df["project"].drop_duplicates()
 for project in projects:
@@ -95,6 +94,7 @@ for _, row in df.iterrows():
 
 conn.commit()
 
+print("\n--- Part 1: Data Management ---")
 print("Database created successfully.")
 print(f"Loaded {len(df)} samples.")
 

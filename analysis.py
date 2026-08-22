@@ -54,6 +54,11 @@ summary["percentage"] = (
     summary["count"] / summary["total_count"] * 100
 ).round(2)
 
+summary.to_csv("outputs/cell_frequencies.csv", index=False)
+print("\n--- Part 2: Initial Analysis ---")
+print(f"Generated cell frequency summary: {len(summary)} rows")
+print("Saved to outputs/cell_frequencies.csv")
+
 # Part 3: Statistical Analysis
 
 metadata_query = """
@@ -114,6 +119,7 @@ for population in cell_columns:
     })
 
 results_df = pd.DataFrame(results)
+results_df.to_csv("outputs/statistical_results.csv", index=False)
 
 # Create boxplots comparing responders vs non-responders
 plt.figure(figsize=(10, 6))
@@ -130,7 +136,7 @@ plt.xlabel("Cell Population")
 plt.ylabel("Relative Frequency (%)")
 
 plt.tight_layout()
-plt.savefig("cell_population_boxplot.png")
+plt.savefig("outputs/cell_population_boxplot.png")
 
 plt.close()
 
@@ -187,6 +193,7 @@ subjects_by_sex = (
 # Part 4 results
 print("\n--- Part 4: Baseline Subset Analysis ---")
 print(f"\nTotal baseline samples: {len(baseline_data)}")
+baseline_data.to_csv("outputs/baseline_samples.csv", index=False)
 
 print("\nSamples by project:")
 print(samples_by_project)
