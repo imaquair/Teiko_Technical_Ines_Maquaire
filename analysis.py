@@ -3,6 +3,8 @@
 import sqlite3
 import pandas as pd
 from scipy.stats import mannwhitneyu
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Connect to the SQLite database
 conn = sqlite3.connect("cell_counts.db")
@@ -112,6 +114,25 @@ for population in cell_columns:
     })
 
 results_df = pd.DataFrame(results)
+
+# Create boxplots comparing responders vs non-responders
+plt.figure(figsize=(10, 6))
+
+sns.boxplot(
+    data=filtered_data,
+    x="population", # cell population on x-axis
+    y="percentage", # relative frequency on y-axis
+    hue="response" # yes or no
+)
+
+plt.title("Cell Population Frequencies: Responders vs Non-Responders")
+plt.xlabel("Cell Population")
+plt.ylabel("Relative Frequency (%)")
+
+plt.tight_layout()
+plt.savefig("cell_population_boxplot.png")
+
+plt.close()
 
 print("\nSamples by response:")
 print(filtered_data.groupby("response")["sample"].nunique())
