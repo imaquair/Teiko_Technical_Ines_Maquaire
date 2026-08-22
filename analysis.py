@@ -2,6 +2,7 @@
 
 import sqlite3
 import pandas as pd
+from scipy.stats import mannwhitneyu
 
 # Connect to the SQLite database
 conn = sqlite3.connect("cell_counts.db")
@@ -51,8 +52,71 @@ summary["percentage"] = (
     summary["count"] / summary["total_count"] * 100
 ).round(2)
 
+# Part 3: Statistical Analysis
 
-print(summary.head())
-print(f"Summary table has {len(summary)} rows.")
+metadata_query = """
+SELECT
+    samples.sample,
+    samples.subject,
+    samples.sample_type,
+    subjects.condition,
+    subjects.treatment,
+    subjects.response
+FROM samples
+JOIN subjects
+    ON samples.subject = subjects.subject
+"""
+
+metadata = pd.read_sql_query(metadata_query, conn)
+
+# Combine the Part 2 summary with the sample metadata
+analysis_data = summary.merge(metadata, on="sample")
+
+# Only include PBMC samples.
+filtered_data = analysis_data[
+    (analysis_data["condition"] == "melanoma")
+    & (analysis_data["treatment"] == "miraclib")
+    & (analysis_data["sample_type"] == "PBMC")
+]
+
+# Compare responders and non-responders for each cell population
+results = []
+
+# go through each cell population and perform the Mann-Whitney U test
+for population in cell_columns: 
+
+    population_data = filtered_data[
+        filtered_data["population"] == population
+    ]
+
+    responders = population_data[
+        population_data["response"] == "yes"
+    ]["percentage"]
+
+    non_responders = population_data[
+        population_data["response"] == "no"
+    ]["percentage"]
+
+    # run test and store the results
+    statistic, p_value = mannwhitneyu(
+        responders,
+        non_responders,
+        alternative="two-sided"
+    )
+
+    results.append({
+        "population": population,
+        "statistic": statistic,
+        "p_value": p_value,
+        "significant": p_value < 0.05 # Mark significant results
+    })
+
+results_df = pd.DataFrame(results)
+
+print("\nSamples by response:")
+print(filtered_data.groupby("response")["sample"].nunique())
+
+print("\nStatistical results:")
+print(results_df)
 
 conn.close()
